@@ -1,0 +1,24 @@
+#version 460
+#extension GL_EXT_ray_tracing : require
+#extension GL_EXT_scalar_block_layout : enable
+
+// Binding 0: Shader storage buffer for the vertert
+layout(set=0,binding =2, scalar) buffer PointBuffer {
+   vec3 queries[];
+} pointBuffer;
+
+layout(set=0,binding =3, scalar) buffer NormalBuffer {
+   vec3 normals[];
+} normalBuffer;
+
+hitAttributeEXT vec3 HitAttribute;
+void main() {
+	const uint idx = gl_LaunchIDEXT.x*720+gl_LaunchIDEXT.y;
+
+	float hit=distance(pointBuffer.queries[gl_PrimitiveID],gl_WorldRayOriginEXT);
+
+	float vahit;
+	if(hit<=1.0){
+		reportIntersectionEXT(0, 0);
+	}
+}
